@@ -1,5 +1,8 @@
 const express = require('express');
 const talkerManager = require('./utils/talkerManager');
+const validationPassword = require('./middleware/validationPassword');
+const { validationEmail } = require('./middleware/validationEmail');
+const tokenGenerated = require('./middleware/tokenGenerated');
 
 const app = express();
 
@@ -30,6 +33,11 @@ app.get('/talker/:id', async (req, res) => {
     });
   }
   res.status(HTTP_OK_STATUS).json(fileId);
+});
+
+app.post('/login', validationEmail, validationPassword, (_req, res) => {
+  res.status(HTTP_OK_STATUS).json({ token:
+    tokenGenerated() });
 });
 
 app.listen(PORT, () => {
