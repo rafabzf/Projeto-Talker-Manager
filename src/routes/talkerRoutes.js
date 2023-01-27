@@ -10,6 +10,27 @@ const talkerWrite = require('../utils/talkerWrite');
 
 const talkerRoutes = express.Router();
 
+talkerRoutes.get('/search', validationToken, async (req, res) => {
+  const search = req.query.q;
+  const talkers = await talkerManager();
+  if (!search) {
+    return res
+    .status(200)
+    .json(talkers);
+  }
+
+  const results = talkers.filter((talker) => 
+  talker.name.includes(search));
+  if (results.length === 0) {
+    return res
+    .status(200)
+    .json([]);
+  }
+  return res
+  .status(200)
+  .json(results);
+});
+
 talkerRoutes.get('/', async (_req, res) => {
   const file = await talkerManager();
   res.status(200)
